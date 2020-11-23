@@ -1,5 +1,5 @@
 const socket = io('/')
-let myVideoStream;
+let  myVideoStream;
 const videoGrid = document.getElementById('video-grid')
 const myVideo = document.createElement('video');
 myVideo.muted = true;
@@ -7,7 +7,8 @@ myVideo.muted = true;
 const peer = new Peer(undefined, {
     path: '/peerjs',
     host: '/',
-    port: '443'
+    port: '3000',
+    pingInterval: '8000'
 });
 
 const peers = {}
@@ -34,7 +35,7 @@ navigator.mediaDevices.getUserMedia({
 })
 
     socket.on('user-disconnected', userId => {
-        alert(`user-disconnected ID: ${userId}`)
+        //alert(`user-disconnected ID: ${userId}`)
         if(peers[userId])
         {
             peers[userId].close()

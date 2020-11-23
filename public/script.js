@@ -7,7 +7,7 @@ myVideo.muted = true;
 const peer = new Peer(undefined, {
     path: '/peerjs',
     host: '/',
-    port: '443'
+    port: '3000'
 });
 
 const peers = {}
@@ -53,6 +53,7 @@ const connectToNewUser = (userId,stream) => {
     console.log(userId)
     const call = peer.call(userId, stream)
     const video = document.createElement('video')
+    video.muted = true;
     call.on('stream', userVideoStream => {
         addVideoStream(video, userVideoStream) 
     })

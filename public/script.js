@@ -17,11 +17,13 @@ navigator.mediaDevices.getUserMedia({
     audio: true
 }).then(stream => {
     myVideoStream = stream;
+   // myVideo.muted = true;
     addVideoStream(myVideo, stream)
 
     peer.on('call', call => {
         call.answer(stream)
         const video = document.createElement('video')
+        video.muted = true;
         call.on('stream', userVideoStream => {
             addVideoStream(video, userVideoStream)
         })
@@ -33,6 +35,7 @@ navigator.mediaDevices.getUserMedia({
 })
 
     socket.on('user-disconnected', userId => {
+        alert(`user-disconnected ID: ${userId}`)
         if(peers[userId])
         {
             peers[userId].close()
@@ -41,9 +44,9 @@ navigator.mediaDevices.getUserMedia({
     })
 
 
-peer.on('open', id => {
-    socket.emit('join-room', ROOM_ID, id);
-})
+    peer.on('open', id => {
+        socket.emit('join-room', ROOM_ID, id);
+    })
 
 
 const connectToNewUser = (userId,stream) => {
@@ -86,7 +89,7 @@ const scrollToBottom = () => {
   }
   
   const playStop = () => {
-    console.log('object')
+    //console.log('object')
     let enabled = myVideoStream.getVideoTracks()[0].enabled;
     if (enabled) {
       myVideoStream.getVideoTracks()[0].enabled = false;

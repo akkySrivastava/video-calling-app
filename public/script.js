@@ -8,7 +8,7 @@ const peer = new Peer(undefined, {
     path: '/peerjs',
     host: '/',
     port: '443',
-    pingInterval: '8000'
+    pingInterval: '6000'
 });
 
 const peers = {}

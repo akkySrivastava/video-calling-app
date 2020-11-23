@@ -35,7 +35,7 @@ navigator.mediaDevices.getUserMedia({
 })
 
     socket.on('user-disconnected', userId => {
-        alert(`user-disconnected ID: ${userId}`)
+        //alert(`user-disconnected ID: ${userId}`)
         if(peers[userId])
         {
             peers[userId].close()
@@ -53,7 +53,7 @@ const connectToNewUser = (userId,stream) => {
     console.log(userId)
     const call = peer.call(userId, stream)
     const video = document.createElement('video')
-    video.muted = true;
+    video.volume = 0;
     call.on('stream', userVideoStream => {
         addVideoStream(video, userVideoStream) 
     })

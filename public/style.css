@@ -13,7 +13,6 @@
   display: flex;
   flex-direction: column;
 }
-
 .main__right {
   flex: 0.2;
 }
@@ -106,4 +105,39 @@
 .unmute,
 .stop {
   color: #cc3b33;
+}
+
+.userslist {
+  list-style: none;
+  font-size: 15px;
+  margin: 5px;
+  cursor: pointer;
+  padding-bottom: 10px;
+  flex-grow: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+li i {
+  margin: 6px;
+}
+.userslist__icons {
+  /* margin-left:15px; */
+  /* height: 90px; */
+}
+.attendance {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 80px;
+  align-items: center;
+  justify-content: center;
+}
+.bottomUsersList {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  bottom: 10px;
+  align-items: center;
+  justify-content: center;
 }

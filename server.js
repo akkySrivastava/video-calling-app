@@ -26,12 +26,35 @@ app.use('/peerjs', peerServer);
 app.set('view engine', 'ejs')
 app.use(express.static('public'))
 
-app.get('/', (req, res) =>{
-    res.redirect(`${uuidv4()}`)
+app.get('/', (req, res) => {
+    res.render('signin', { error:error});
 })
 
-app.get('/:room', (req, res) => {
-    res.render('room', {roomId: req.params.room})
+app.post('/', (req, res) => {
+    res.render('room')
+})
+
+
+app.post('/room', (req, res) => {
+    let items = req.body;
+    username = req.params.host;
+    //items.host = true
+ console.log("room")
+ res.cookie("context",items, { httpOnly: true });
+ res.redirect(`/${uuidv4()}`)
+})
+
+app.get('/:room',(req,res)=>{
+ var context = req.cookies["context"];
+ res.clearCookie("context", { httpOnly: true });
+ let roomUsers = []
+ for (let i = 0; i < usersList.length; i++) {
+     if(usersList[i].roomid === req.params.id)
+     {
+         roomUsers.push(usersList[i])
+     }
+ }
+ res.render("room", {roomId: req.params.room , username: req.params.host ,list:context,userList:roomUsers});
 })
 
 app.get('/atte',(req,res)=>{
@@ -122,6 +145,70 @@ io.on('connection', socket => {
           // io.to(roomId).emit('refresh',roomUsers)
            io.to(roomId).emit('screen-share-remove', null)
        })
+
+       socket.on('user-video-off',(user)=>{
+        console.log(user+" off")
+           for(let i=0;i<usersList.length;i++){
+            if(user===usersList[i].name){
+                usersList[i].video=false
+            }
+        }
+        refresh()
+
+        io.to(roomId).emit('refresh',roomUsers)
+    })
+    socket.on('user-video-on',(user)=>{
+        console.log(user+" on")
+           for(let i=0;i<usersList.length;i++){
+            if(user===usersList[i].name){
+                usersList[i].video=true
+            }
+        }
+        refresh()
+        io.to(roomId).emit('refresh',roomUsers)
+    })
+
+        socket.on('mute-the-user',name=>{
+                for(let i=0;i<usersList.length;i++){
+                    if(name===usersList[i].name){
+                        usersList[i].audio=false
+                    }
+                }
+                refresh()
+                io.to(roomId).emit('refresh-muted',roomUsers,name)
+        })
+
+        socket.on('block-the-user',name=>{
+            for (let i = 0; i < usersList.length; i++) {
+            if(usersList[i].name===name){
+                usersList.splice(i,1)
+            }                              
+        }
+        refresh()
+        io.to(roomId).emit('refresh',roomUsers)
+        io.to(roomId).emit('make-user-leave',name)
+       })
+
+       socket.on('user-muted',(user)=>{
+        console.log(user+" muted")
+        for(let i=0;i<usersList.length;i++){
+            if(user===usersList[i].name){
+                usersList[i].audio=false
+            }
+        }
+        refresh()
+        io.to(roomId).emit('refresh',roomUsers)
+    })
+     socket.on('user-unmuted',(user)=>{
+        console.log(user+" unmuted")
+           for(let i=0;i<usersList.length;i++){
+            if(user===usersList[i].name){
+                usersList[i].audio=true
+            }
+        }
+        refresh()
+        io.to(roomId).emit('refresh',roomUsers)
+    })
 
         socket.on('disconnect', () => {
             socket.to(roomId).broadcast.emit('user-disconnected', userId)

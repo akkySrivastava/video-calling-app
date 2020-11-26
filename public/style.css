@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  background-color: black;
 }
 
 .main {
@@ -19,11 +20,22 @@
 
 .main__videos {
   flex-grow: 1;
-  background-color: black;
   display: flex;
   justify-content: center;
+  background-color: black;
   align-items: center;
   padding: 40px;
+  overflow-y: scroll;
+}
+
+.main__controls__buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+}
+
+.main__controls__buttons > .main__controls__record {
+  right: 0px;
 }
 
 .main__controls {
@@ -31,25 +43,31 @@
 }
 
 .main__right {
+  color: white;
   background-color: #242324;
   border-left: 1px solid #3d3d42;
 }
 
 .main__controls {
   color: #d2d2d2;
+  background-color: #3d3d42;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   padding: 5px;
+  border-radius: 20px;
 }
 
 .main__controls__block {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .main__controls__button {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 8px 10px;
   min-width: 80px;
@@ -70,7 +88,16 @@
   flex-direction: column;
 }
 
+.chat {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .main__header {
+  display: flex;
   padding-top: 5px;
   color: #f5f5f5;
   text-align: center;
@@ -87,15 +114,36 @@
 }
 
 .main__message_container {
-  padding: 22px 12px;
+  position: relative;
+  background-color: #3d3d42;
+  width: 100%;
+  padding: 20px;
   display: flex;
+  flex-direction: column;
+  padding-bottom: 0px;
 }
 
 .main__message_container input {
+  position: relative;
   flex-grow: 1;
   background-color: transparent;
   border: none;
   color: #f5f5f5;
+  margin-bottom: 10px;
+}
+
+.main__message_container > #uploadForm {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  bottom: 0px;
+  background-color: inherit;
+}
+
+.main__message_container .btn {
+  padding-top: 10px;
+  margin-top: 10px;
+  color: aqua;
 }
 
 .leave_meeting {
@@ -121,23 +169,7 @@
 li i {
   margin: 6px;
 }
-.userslist__icons {
-  /* margin-left:15px; */
-  /* height: 90px; */
-}
-.attendance {
+.usersList__scroll {
   display: flex;
-  flex-direction: row;
-  position: absolute;
-  bottom: 80px;
-  align-items: center;
-  justify-content: center;
-}
-.bottomUsersList {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  bottom: 10px;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }

@@ -30,24 +30,41 @@
             video{
                 height: 350px;
                 width: 400px;
-                object-fit: cover;
+                object-fit: contain;
                 padding: 10px;
+                transform:scaleX(-1)
+                
+
             }
         </style>
     </head>
     <body>
             <div class="main">
                 <div class="main__left">
+                    <div class = "main__controls__buttons">
+                       <span id="startScreen" class="main__control__screen" style="font-size: 30px; color: white;">
+                        <i class=" fas fa-desktop"></i>
+                        <span style="font-size:15px">Share Screen</span>
+                       </span>
+                        
+                        <span id="start" class="main__record__button" style="font-size: 30px; color: white;">
+                           <i  class="fas fa-record-vinyl" style="size: 2rem; color:white"></i>
+                           <span style="font-size:15px;color:white ">Record</span>    
+                        </span>
+                       
+                   </div>
                     <div class="main__videos">
+
                          <div id="video-grid">
 
                          </div>
+                         
                     </div>
                     <video class="record__video" width="120" height="80" controls style="visibility:hidden;">
                         <source type="video/mp4">
                         <source type="audio/mp3">
                     </video>
-                    <div class="main__controls">
+                        <div class="main__controls">
                         <div class="main__controls__block">
                             <div onclick="muteUnmute()" class="main__controls__button main__mute_button">
                                 <i class=" fas fa-microphone"></i>
@@ -57,17 +74,7 @@
                                 <i class="fas fa-video"></i>
                                 <span>Stop Video</span>
                              </div>
-                        </div>
-                        <div class="main__controls__block">
-                            <span id="startScreen" class="main__controls__button main__controls__screen">
-                                <i class=" fas fa-desktop"></i>
-                                <span style="font-size:18px">Share Screen</span>
-                            </span>
-                            <span id="start" class="main__controls__button main__record__button">
-                                <i  class="fas fa-record-vinyl"></i>
-                                <span style="font-size:18px">Record</span>    
-                            </span>
-                            <span id="stop" class="main__controls__button main__record__button" style="color: white;visibility:hidden;">
+                             <span id="stop" class="main__controls__button main__record__button" style="color: white;visibility:hidden;">
                                 <i class="unmute fas fa-stop"></i>
                                 <span style="font-size:18px">Stop</span>
                             </span>
@@ -83,10 +90,8 @@
                                 <i class = "fas fa-flashlight"></i>
                                 <span class = "main__torch">Torch</span>
                             </span>
-                         </div>
-                         <div class="main__controls__block">
-                            <div class="main__controls__button">
-                               <p onclick="leaveMeet()" class="leave_meeting">Leave Meeting</p>
+                            <div onclick="leaveMeet()" class="main__controls__button">
+                               <span  class="leave_meeting">Leave Meeting</span>
                             </div>
                          </div>
                     </div>
@@ -102,11 +107,12 @@
                         </ul>
             
                         </div>
-                        <div class="main__message_container">
+                        <div class="main__message_container">  
                             <input id="chat_message" type="text" placeholder="Type message here...">
                             <form id="uploadForm" action="http://localhost:3000/api/file" enctype="multipart/form-data" method="post">
-                                <input type="file" name="userFile" />
-                                <input class="btn btn-info upload" type="submit" value="Upload File" name="submit">
+                                
+                                <input type="file" name="userFile" class = "file__input" />
+                                <button class = "btn btn-info btn3" type="submit" value="Upload File" name="submit">Upload File</button>
                             </form>
                         </div>
                     </div>
@@ -115,16 +121,12 @@
                                 <ul class="main__right__usersList">
                                     List of users
                                 </ul>
-                        </div>
-                        <div class="bottomUsersList">
-                            <div class="attendance">
-                                <form method="GET" action="#">
-                                    <button class="btn btn-dark" type="submit">Refresh</button>
-                                </form>
                                 <form method="GET" action="http://localhost:3000/atte">
                                     <button class="btn btn-info" type="submit">Attendance</button>
                                 </form>
-                            </div>
+                                <form method="GET" action="#">
+                                    <button class="btn btn-dark" type="submit">Refresh</button>
+                                </form>
                         </div>
                     </div>
                 </div>

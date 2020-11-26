@@ -7,7 +7,7 @@ myVideo.muted = true;
 const peer = new Peer(undefined, {
     path: '/peerjs',
     host: '/',
-    port: '3000',
+    port: '443',
     pingInterval: '6000'
 });
 
@@ -20,6 +20,19 @@ navigator.mediaDevices.getUserMedia({
     myVideoStream = stream;
    // myVideo.muted = true;
     addVideoStream(myVideo, stream)
+
+    displayUsersList(usersList)  
+    socket.on('refresh',list=>{
+        displayUsersList(list)
+    })
+
+    socket.on('refresh-muted',(list,name)=>{
+      console.log(name)
+      if(name===USERS){
+           $(".main__mute_button").click();
+      }
+      displayUsersList(list)
+  })
 
     peer.on('call', call => {
         call.answer(stream)
@@ -51,15 +64,39 @@ navigator.mediaDevices.getUserMedia({
 
     })
 
+    socket.on('torched-on',userId =>{
+      if(userId === userId){
+      $('#display').css('background','whitesmoke')
+      $('.main__left').prepend(`<h5 style = "background-color: whitesmoke;"class="torch_user">` `${userId}` ` Torched on</h5>`);
+      setTimeout(()=>{
+      $('.main__videos').css('background','black')
+      $('.torch_user').remove()
+      },5000)
+    }
+  })
+
 
     peer.on('open', id => {
         socket.emit('join-room', ROOM_ID, id);
     })
 
     const shareTheFile = (src) =>{
-      let html = `<li class="chat__convo"><h5>${src}</h5><form action="http://localhost:3000/download${src}" method="GET"><button class="btn btn-warning" type="submit">Download File</button></form></li>`;
+      let html = `<li class="chat__convo"><h5>${src}</h5><form action="https://video-calling-app.herokuapp.com/download${src}" method="GET"><button class="btn btn-warning" type="submit">Download File</button></form></li>`;
       $('ul').append(html) 
   }
+
+  function drag(){
+    let val = document.querySelectorAll('.VideoStreams')
+    for(let i=0;i<val.length;i++){
+        const item = val[i]
+        val[i].addEventListener('click',()=>{
+            displayGrid.append(item);
+        })
+        val[i].addEventListener('dragstart',()=>{
+            displayList.append(item)
+        })
+    }
+    }
 
 const connectToNewUser = (userId,stream) => {
     console.log(userId)
@@ -74,6 +111,19 @@ const connectToNewUser = (userId,stream) => {
 
     peers[userId] = call
 }
+
+const displayNewuser = (name=>{
+  console.log(name)
+  let html = `<li class="chat__convo"><h4 class="text-success">${name} Joined</h4></li>`; 
+  $('.userslist').append(html)
+})
+
+// USER LEFT
+const UserLeft = (name=>{
+  console.log(name)
+  let html = `<li class="chat__convo"><h4 class="text-danger">${name} left</h4></li>`;
+  $('.chat__messages__list').append(html)
+})
 
 const addVideoStream = (video, stream) => {
     video.srcObject = stream;
@@ -139,25 +189,16 @@ const addVideoStream = (video, stream) => {
   }
 
   //Torch
-  $('.main__torch').click(()=>{
+  $('.main__torch').click((userId)=>{
     // console.log(userId)
-    socket.emit('torch')
+    socket.emit('torch',userId)
 })
-socket.on('torched-on',(user) =>{
-    if(1){
-    $('.main__videos').css('background','whitesmoke')
-    $('.main__left').prepend(`<h5 class="torch_user"> Someone Torched on</h5>`);
-    setTimeout(()=>{
-    $('.main__videos').css('background','black')
-    $('.torch_user').remove()
-    },5000)
-  }
-})
+
 
 //chats
 let text = $("input");
   // when press enter send message
-  $('html').keydown(function(e) {
+  $('#chat_message').keydown(function(e) {
     if (e.which == 13 && text.val().length !== 0) {
       socket.emit('message', text.val());
       text.val('')
@@ -306,3 +347,51 @@ $('.main__controls__chat').click(()=>{
   $('.userslist').css("display","none")
   $('.chat').css("display", "block");
 })
+
+//Display UsersList
+const displayUsersList = list =>{
+  let html = `<li  class="user__list"><h3>${list.length} Joined</h3></li>
+  <h6>'Host can Mute and Kick Others'}</h6>
+  <br/> 
+  `
+  document.querySelector('.usersList').innerHTML = html;
+  for( i=0; i<list.length ; i++){
+      let html = `<li class="user__list"><h6 class="text-dark">${list[i].name}${list[i].host? '(HOST)' :''}</h6>
+      <div class="userslist__icons">
+      <i onclick="MuteTheUser('${list[i].name}')" class="unmute fas ${list[i].audio ? 'fa-microphone' :  'fa-microphone-slash'}"></i>
+      <i class="unmute fas  ${list[i].video ? 'fa-video' :  'fa-video-slash'}"></i>
+      <button class="btn btn-outline-dark ${Data.host ? '': 'd-none'}" onclick="BlockTheUser('${list[i].name}')">${Data.host ? 'Block' : ''}</buton>
+      </div>
+      </li>`;
+      $('.usersList').append(html);
+  }
+}
+
+//Mute the username
+function MuteTheUser(name){
+  if(Data.host){
+      socket.emit('mute-the-user',name)
+  }
+}
+// BLOCK THE USER
+function BlockTheUser(name){
+  socket.emit('block-the-user',name)
+}
+socket.on('make-user-leave',user=>{
+  if(user===USERS){
+      leaveMeet()
+  }
+})
+
+function leaveMeet(){
+  const enabled = myVideoStream.getVideoTracks()[0].enabled;
+    if(enabled){
+      $('.leave_meeting').click()
+    }
+    socket.emit('disconnect')  
+    setTimeout(()=>{
+         window.history.back();
+    },1500)
+
+}
+

@@ -16,19 +16,20 @@
 <body>
     <p class="text-danger"><%= error %></p>
     <div class="card">
-        <form method="POST" action="http://localhost:3000/">
+        <form method="POST" action="https://video-calling-app-akky.herokuapp.com">
             <label>Username</label>
             <input required class="form-control" type="text" placeholder="Enter your name" name="username" id="username" />
             <label>RoomId</label>
-            <input class="form-control" required type="text" placeholder="Enter Roomid" name="roomid" id="roomid" />
+            <input class="form-control" required type="text" placeholder="Enter Roomid" name="roomId" id="roomid" />
             <button class="btn btn-info btn1">Join</button>
         </form>
         <span></span>
-        <form method="POST" action="http://localhost:3000/name/room">
+        <form method="POST" action="https://video-calling-app-akky.herokuapp.com/room">
             <label>Username</label>
             <input class="form-control"  placeholder="Enter your name" required type="text" name="host" />
             <button class="btn btn-warning btn2">Create New Room</button>
         </form>
+        <hr>
     </div>
 </body>
 </html>
